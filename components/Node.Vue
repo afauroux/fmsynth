@@ -1,19 +1,23 @@
 <template>
-    <component :is="comp1 ? comp1 : Empty"/>
+    <component :is="comp" :init="init"/>
 </template>
 
 <script>
-import Oscillator from "~/components/Oscillator.vue";
+/*import Oscillator from "~/components/Oscillator.vue";
 import Empty from "~/components/Empty.vue";
-
+*/
 export default {
-  component: {
+  /*component: {
     Oscillator,
     Empty
-  },
+  },*/
+  name: "node",
+  props: ["comp", "init"],
   data: function() {
-    return { comp1: comp };
+    return {};
   },
-  prop: ["comp"]
+  mounted() {
+    console.log("test", this.init);
+  }
 };
 </script>

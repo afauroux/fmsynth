@@ -33,7 +33,7 @@ export default {
     this.osc = this.ctx.createOscillator();
     this.dest = this.ctx.destination;
     this.osc.start(0);
-
+    console.log(this.init);
     if (this.init) {
       this.waveshape = this.init.waveshape;
       this.isPlaying = this.init.isPlaying;

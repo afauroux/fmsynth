@@ -1,9 +1,10 @@
 <template>
-    <draggable v-model="nodes" class="board" >
-      <component  v-for="i in indexes" 
+    <draggable element="node" v-model="nodes" class="board" @start="start" @end="end" :component-data="getComponentData()" >
+      <node  v-for="i in indexes" 
                     :key="i" 
-                    :is="nodes[i]"                  
-                    class="cell" :init="{'waveshape': 'square','isPlaying': true,'frequency': 550}"/>
+                    :comp="nodes[i]"               
+                    class="cell" />
+ 
 
     </draggable>
 
@@ -46,7 +47,26 @@ export default {
   mounted() {
     this.indexes = [...Array(this.nodeNB).keys()];
   },
-  methods: {}
+  methods: {
+    getComponentData() {
+      console.log("getcomp");
+      return {
+        on: {},
+        props: {
+          init: { waveshape: "square", isPlaying: true, frequency: 550 }
+        }
+      };
+    },
+    start() {
+      console.log("start");
+    },
+    end() {
+      console.log("end");
+    }
+    /*getComponentData(){
+      init="{'waveshape': 'square','isPlaying': true,'frequency': 550}
+    }*/
+  }
 };
 </script>
 
