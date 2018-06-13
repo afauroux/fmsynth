@@ -7,7 +7,7 @@
             <option>triangle</option>
         </select>
         <button id="btnPlay" @click="play">play</button>
-		<slider  @input="changeFreq($event)" :value="frequency" min="20" max="20000" step="100"/>
+		<slider  @input="changeFreq($event)" :value="frequency" min="20" max="2000" step="1"/>
     </div>
 </template>
 
@@ -20,6 +20,7 @@ export default {
     Knob,
     Slider
   },
+  props: ["init"], //init = {waveshape: "sine",isPlaying: false,frequency: 440}
   data: function() {
     return {
       waveshape: "sine",
@@ -32,6 +33,15 @@ export default {
     this.osc = this.ctx.createOscillator();
     this.dest = this.ctx.destination;
     this.osc.start(0);
+
+    if (this.init) {
+      this.waveshape = this.init.waveshape;
+      this.isPlaying = this.init.isPlaying;
+      this.frequency = this.init.frequency;
+    }
+    if (this.isPlaying) {
+      this.play();
+    }
   },
   watch: {
     waveshape: function(newVal) {
@@ -51,8 +61,10 @@ export default {
     changeFreq: function(evt) {
       this.osc.frequency.value = +evt.target.value;
       this.frequency = +evt.target.value;
-      console.log(evt.target.value);
     }
+  },
+  destroyed: function() {
+    this.osc.disconnect();
   }
 };
 </script>

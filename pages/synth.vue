@@ -1,22 +1,52 @@
 <template>
-    <div class="board">
-      <oscillator v-for="node in nodes" :key="node.key" class="cell"/>
+    <draggable v-model="nodes" class="board" >
+      <component  v-for="i in indexes" 
+                    :key="i" 
+                    :is="nodes[i]"                  
+                    class="cell" :init="{'waveshape': 'square','isPlaying': true,'frequency': 550}"/>
 
-    </div>
+    </draggable>
+
 </template>
 
 <script>
+import Node from "~/components/Node.vue";
 import Oscillator from "~/components/Oscillator.vue";
+import Empty from "~/components/Empty.vue";
+import draggable from "vuedraggable";
 
 export default {
   components: {
-    Oscillator
+    Node,
+    Oscillator,
+    Empty,
+    draggable
   },
   data: function() {
     return {
-      nodes: [{ key: 1 }, { key: 2 }, { key: 3 }, { key: 4 }, { key: 5 }]
+      nodeNB: 12,
+      indexes: [],
+      nodes: [
+        Oscillator,
+        Oscillator,
+        Empty,
+        Empty,
+        Empty,
+        Empty,
+        Empty,
+        Empty,
+        Oscillator,
+        Oscillator,
+        Oscillator,
+        Oscillator,
+        Oscillator
+      ]
     };
-  }
+  },
+  mounted() {
+    this.indexes = [...Array(this.nodeNB).keys()];
+  },
+  methods: {}
 };
 </script>
 
@@ -24,7 +54,7 @@ export default {
 .board {
   display: grid;
   grid-template-columns: repeat(4, auto);
-  grid-auto-rows: 20vh;
+  grid-auto-rows: calc(25vw / 1.618);
   grid-gap: 2px;
 }
 .cell {
