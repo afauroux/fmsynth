@@ -1,84 +1,75 @@
 <template>
-    <draggable element="node" v-model="nodes" class="board" @start="start" @end="end" :component-data="getComponentData()" >
-      <node  v-for="i in indexes" 
-                    :key="i" 
-                    :comp="nodes[i]"               
-                    class="cell" />
- 
-
+    <draggable  v-model="nodelist" class="board" :options="{handle:'.myhandle'}" @start="start" @end="end"  >
+      <div  v-for="i of indexes" :key="i"  class="cell" >
+          <span class="myhandle">°</span>
+          <node  :key="i" :index="i" />
+      </div>
     </draggable>
 
 </template>
 
 <script>
-import Node from "~/components/Node.vue";
-import Oscillator from "~/components/Oscillator.vue";
-import Empty from "~/components/Empty.vue";
-import draggable from "vuedraggable";
+import Node from '~/components/Node.vue';
+import draggable from 'vuedraggable';
 
 export default {
-  components: {
-    Node,
-    Oscillator,
-    Empty,
-    draggable
-  },
-  data: function() {
-    return {
-      nodeNB: 12,
-      indexes: [],
-      nodes: [
-        Oscillator,
-        Oscillator,
-        Empty,
-        Empty,
-        Empty,
-        Empty,
-        Empty,
-        Empty,
-        Oscillator,
-        Oscillator,
-        Oscillator,
-        Oscillator,
-        Oscillator
-      ]
-    };
-  },
-  mounted() {
-    this.indexes = [...Array(this.nodeNB).keys()];
-  },
-  methods: {
-    getComponentData() {
-      console.log("getcomp");
-      return {
-        on: {},
-        props: {
-          init: { waveshape: "square", isPlaying: true, frequency: 550 }
-        }
-      };
-    },
-    start() {
-      console.log("start");
-    },
-    end() {
-      console.log("end");
-    }
-    /*getComponentData(){
-      init="{'waveshape': 'square','isPlaying': true,'frequency': 550}
-    }*/
-  }
+	components: {
+		Node,
+		draggable,
+	},
+	created: function() {
+		this.$store.commit('initializeCtx');
+		this.$store.commit('initializeNodes');
+		this.$store.commit('addComponent', {
+			component: 'Oscillator',
+			index: 2,
+			data: { waveshape: 'sine', isPlaying: false, frequency: 440 },
+		});
+		console.log(this.$store.state.nodes[1]);
+	},
+	computed: {
+		indexes: function() {
+			return [...Array(this.$store.state.gridnodeNB).keys()];
+		},
+		nodelist: {
+			get() {
+				return this.$store.state.nodes;
+			},
+			set(newList) {
+				this.$store.commit('setNodes', newList);
+			},
+		},
+	},
+	methods: {
+		start(ev) {
+			console.log('start', ev);
+		},
+		end(ev) {
+			console.log('end', ev);
+		},
+	},
 };
 </script>
 
 <style >
 .board {
-  display: grid;
-  grid-template-columns: repeat(4, auto);
-  grid-auto-rows: calc(25vw / 1.618);
-  grid-gap: 2px;
+	display: grid;
+	grid-template-columns: repeat(4, auto);
+	grid-auto-rows: calc(25vw / 1.618);
+	grid-gap: 2px;
 }
 .cell {
-  border: 1px solid black;
-  padding: 10px;
+	border: 1px solid black;
+	padding: 0px 10px 10px 10px;
+}
+.myhandle {
+	display: block;
+	width: 1em;
+	height: 1em;
+
+	cursor: move;
+	z-index: 1;
+	cursor: -webkit-grabbing;
+	margin: 2px;
 }
 </style>
