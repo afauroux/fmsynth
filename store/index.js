@@ -10,14 +10,6 @@ const createStore = () => {
 
     },
     getters: {
-      audioCtx(state) {
-        if (process.browser && !state.audioCtx) {
-          state.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-        }
-        return state.audioCtx
-      }
-    },
-    getters: {
       getNode: (state) => (index) => {
         return state.nodes[index]
       }
@@ -28,10 +20,10 @@ const createStore = () => {
           state.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
         }
       },
-      initializeNodes(state) {
+      initializeNodes(state, component) {
         for (let i = 0; i < state.gridnodeNB; i++) {
           state.nodes[i] = {
-            component: 'Empty',
+            component: component,
             data: {}
           }
         }
@@ -41,6 +33,9 @@ const createStore = () => {
           component: c.component,
           data: c.data
         }
+      },
+      updateCompData(state, index, data) {
+        state.nodes[i].data = data;
       },
       swapComponent(state, i1, i2) {
         let comp = state.nodes[i1].component;

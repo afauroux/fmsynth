@@ -1,16 +1,13 @@
 <template>
-    <component :is="(''+comp)" :init="init"/>
+    <component :is="comp" :index="index"/>
 </template>
 
 <script>
-import Oscillator from '~/components/Oscillator.vue';
 import Empty from '~/components/Empty.vue';
-import { mapGetters } from 'vuex';
 
 export default {
 	component: {
-		Oscillator: Oscillator,
-		Empty: Empty,
+		Empty,
 	},
 	props: ['index'],
 	data: function() {
@@ -25,15 +22,14 @@ export default {
 		},
 	},
 	mounted() {
-		console.log('' + this.comp); //, this.nodes[this.index].component);
+		//console.log('' + this.$component['Empty']); //, this.nodes[this.index].component);
 	},
 	computed: {
-		...mapGetters(['getNode']),
 		nodes: function() {
 			return this.$store.state.nodes;
 		},
 		comp: function() {
-			return this.nodes && this.nodes[this.index] ? this.nodes[this.index].component : 'Empty';
+			return this.nodes && this.nodes[this.index] ? this.nodes[this.index].component : Empty;
 		},
 		init: function() {
 			return this.nodes && this.nodes[this.index] ? this.nodes[this.index].data : {};

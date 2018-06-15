@@ -11,21 +11,25 @@
 <script>
 import Node from '~/components/Node.vue';
 import draggable from 'vuedraggable';
+import Oscillator from '~/components/Oscillator.vue';
+import Empty from '~/components/Empty.vue';
 
 export default {
 	components: {
 		Node,
+		Oscillator,
+		Empty,
 		draggable,
 	},
 	created: function() {
 		this.$store.commit('initializeCtx');
-		this.$store.commit('initializeNodes');
+		this.$store.commit('initializeNodes', Empty);
 		this.$store.commit('addComponent', {
-			component: 'Oscillator',
+			component: Oscillator,
 			index: 2,
 			data: { waveshape: 'sine', isPlaying: false, frequency: 440 },
 		});
-		console.log(this.$store.state.nodes[1]);
+		console.log(this.$store.state.nodes);
 	},
 	computed: {
 		indexes: function() {

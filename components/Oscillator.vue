@@ -20,7 +20,7 @@ export default {
 		Knob,
 		Slider,
 	},
-	props: ['init'], //init = {waveshape: "sine",isPlaying: false,frequency: 440}
+	props: ['index'], //init = {waveshape: "sine",isPlaying: false,frequency: 440}
 	data: function() {
 		return {
 			waveshape: 'sine',
@@ -29,24 +29,34 @@ export default {
 		};
 	},
 	mounted: function() {
-		this.ctx = this.$store.getters.audioCtx;
+		this.ctx = this.$store.state.audioCtx;
 		this.osc = this.ctx.createOscillator();
 		this.dest = this.ctx.destination;
-		this.$store.setNode(i, data);
 		this.osc.start(0);
-		console.log(this.init);
-		if (this.index) {
-			this.waveshape = this.$store.state.nodes[i].waveshape;
-			this.isPlaying = this.init.isPlaying;
-			this.frequency = this.init.frequency;
+		this.data = this.$store.state.nodes[this.index].data;
+		this.comp = this.$store.state.nodes[this.index].component;
+
+		if (this.data) {
+			this.waveshape = this.data.waveshape;
+			this.isPlaying = this.data.isPlaying;
+			this.frequency = this.data.frequency;
 		}
+		this.osc.frequency.value = this.frequency;
+
 		if (this.isPlaying) {
-			this.play();
+			console.log('shbhdbjhqbjhdbcjhb');
+			this.osc.connect(this.dest);
 		}
+	},
+	computed: {
+		node: function() {
+			return this.$store.state.nodes[this.index];
+		},
 	},
 	watch: {
 		waveshape: function(newVal) {
 			this.osc.type = newVal;
+			this.node.data.waveshape = newVal;
 		},
 	},
 	methods: {
@@ -58,10 +68,12 @@ export default {
 				this.osc.connect(this.dest);
 				this.isPlaying = true;
 			}
+			this.node.data.isPlaying = this.isPlaying;
 		},
 		changeFreq: function(evt) {
 			this.osc.frequency.value = +evt.target.value;
 			this.frequency = +evt.target.value;
+			this.node.data.frequency = +evt.target.value;
 		},
 	},
 	destroyed: function() {
