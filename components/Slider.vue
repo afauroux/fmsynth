@@ -1,14 +1,14 @@
 <template>
     <div class="slidercontainer" >
-		<label for="freq">Freq: </label>
-		<input class="slider" id="freq" type="range" @input="$emit('input',$event)" :value="value"  :max="max" :min="min" :step="step" />
-		<input type="number" id="freqVal" :value="value" @input="$emit('input',$event)" :max="max" :min="min" /> 
+		<label for="slide">{{name+": "}}</label>
+		<input class="slider" id="slide" type="range" @input="$emit('input',$event)" :value="value"  :max="max" :min="min" :step="step" />
+		<input type="number" id="slideVal" :value="value" @input="$emit('input',$event)" :max="max" :min="min" /> 
 	</div>
 </template>
 
 <script>
 export default {
-  props: ["value", "min", "max", "step"],
+  props: ["value", "min", "max", "step", "name"],
   data: function() {
     return {};
   }
@@ -17,7 +17,7 @@ export default {
 
 
 <style>
-#freqVal,
+#slideVal,
 label {
   width: 5em;
 }
