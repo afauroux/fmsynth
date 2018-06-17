@@ -15,6 +15,7 @@ div {
 	background: -webkit-linear-gradient(bottom, #800000, #867744);
 	background: linear-gradient(bottom, #800000, #867744);
 	-webkit-background-clip: text;
+	background-clip: text;
 	-webkit-text-fill-color: transparent;
 	/*-webkit-text-stroke-width: 1px;
 	-webkit-text-stroke-color: rgb(180, 255, 255);*/
