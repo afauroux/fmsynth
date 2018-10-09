@@ -24,12 +24,7 @@ export default {
 	},
 	props: ['index'], //init = {waveshape: "sine", isPlaying: false, gain: 50,frequency: 440}
 	data() {
-		return {
-			waveshape: 'sine',
-			isPlaying: false,
-			frequency: 440,
-			gain: 50,
-		};
+		return this.getNodeData()
 	},
 	mounted() {
 		this.ctx = this.$store.state.audioCtx;
@@ -39,11 +34,11 @@ export default {
 			this.dest = this.ctx.destination; // if no destination we output to the speakers
 		}*/
 		this.dest = this.$store.state.nodes[5].audioNode;
-		console.log(this.dest);
+		//console.log(this.dest);
 		this.osc.start(0);
 		this.data = this.$store.state.nodes[this.index].data;
 		this.comp = this.$store.state.nodes[this.index].component;
-
+		this.setNodePlugs({ index: this.index, plugs: { name: 'in', name: 'out' } });
 		if (this.data) {
 			this.waveshape = this.data.waveshape;
 			this.gain = this.data.gain;
@@ -66,23 +61,14 @@ export default {
 		},
 		nodeData: {
 			set(val) {
-				console.log('sett');
 				this.setNodeData(val);
 			},
 			get() {
-				console.log('gett');
-				return this.getNodeData()(this.index);
+				return this.getNodeData(this.index);
 			},
 		},
 	},
 	watch: {
-		nodeData() {
-			console.log('nodedztt');
-		},
-		to2(newVal) {
-			console.log('yo', newVal);
-			this.gainNode.connect(newVal);
-		},
 		isPlaying(newVal) {
 			let d = this.getNodeAudioN()(5);
 			if (d) {
@@ -96,24 +82,26 @@ export default {
 			} else {
 				this.gainNode.disconnect();
 			}
+			this.setNodeData(this.data);
 		},
 		waveshape(newVal) {
 			this.osc.type = newVal;
-			this.node.data.waveshape = newVal;
+			this.setNodeData({ index: this.index, data: this.data });
+			console.log(this.data);
 		},
 		gain(newValue) {
 			let g = newValue / 100;
 			if (g) this.gainNode.gain.setValueAtTime(g, this.ctx.currentTime);
-			this.node.data.gain = newValue;
+			this.setNodeData({ index: this.index, data: this.data });
 		},
 		frequency(newValue) {
 			this.osc.frequency.value = newValue;
-			this.node.data.frequency = newValue;
+			this.setNodeData({ index: this.index, data: this.data });
 		},
 	},
 	methods: {
 		...mapGetters(['getNodeData', 'getNodeAudioN']),
-		...mapActions(['setNodeData']),
+		...mapActions(['setNodeData', 'setNodePlugs']),
 		destroyed() {
 			this.osc.disconnect();
 			this.gainNode.disconnect();
@@ -129,54 +117,6 @@ export default {
   flex-basis: content;*/
 	grid-auto-rows: 25px;
 	grid-row-gap: 5px;
-}
-#freqVal,
-label {
-	width: 5em;
-}
-.slidercontainer {
-	white-space: nowrap;
-	border: 1px #d3d3d3 solid;
-	border-radius: 5px;
-	display: flex;
-	justify-content: center;
-	align-content: top;
-	text-align: center;
-	height: 25px;
-}
-.slider {
-	-webkit-appearance: none;
-	width: 100%;
-	height: 25px;
-	background: #d3d3d3;
-	outline: none;
-	opacity: 0.7;
-	border-radius: 10px;
-	-webkit-transition: 0.2s;
-	padding: 2px 0px 2px 0px;
-	transition: opacity 0.2s;
-}
-
-.slider:hover {
-	opacity: 1;
-}
-
-.slider::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	appearance: none;
-	border-radius: 10px;
-	width: 25px;
-	height: 25px;
-	background: #4caf50;
-	cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-	width: 25px;
-	height: 25px;
-	border-radius: 10px;
-	background: #4caf50;
-	cursor: pointer;
 }
 </style>
 

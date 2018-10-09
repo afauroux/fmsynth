@@ -1,15 +1,18 @@
 import Vuex from 'vuex'
-
+import Empty from '~/components/Empty.vue';
 
 const createStore = () => {
   return new Vuex.Store({
     state: {
       audioCtx: undefined,
-      gridnodeNB: 12,
+      gridnodeNB: 24,
       nodes: []
 
     },
     getters: {
+      getNodes: (state) => {
+        return state.nodes;
+      },
       getNode: (state) => (index) => {
         return state.nodes[index]
       },
@@ -22,6 +25,9 @@ const createStore = () => {
       getNodeAudioN: (state) => (index) => {
         return state.nodes[index] ? state.nodes[index].audioNode : {}
       },
+      getNodePlugs: (state) => (index) => {
+        return state.nodes[index] ? state.nodes[index].plugs : {}
+      },
 
     },
     mutations: {
@@ -33,10 +39,11 @@ const createStore = () => {
       initializeNodes(state, component) {
         for (let i = 0; i < state.gridnodeNB; i++) {
           state.nodes[i] = {
-            component: component,
+            component: component ? component : Empty,
             data: {},
             audioNode: undefined,
-            dest: undefined
+            dest: undefined,
+            plugs: []
           }
         }
       },
@@ -45,7 +52,8 @@ const createStore = () => {
           component: c.component,
           data: c.data,
           audioNode: c.audioNode,
-          dest: c.dest
+          dest: c.dest,
+          plugs: c.plugs
         }
       },
       setNodeData(state, {
@@ -65,7 +73,12 @@ const createStore = () => {
         audioNode
       }) {
         state.nodes[index].audioNode = audioNode;
-        console.log('trying')
+      },
+      setNodePlugs(state, {
+        index,
+        plugs
+      }) {
+        state.nodes[index].plugs = plugs;
       },
       swapComponent(state, i1, i2) {
         let comp = state.nodes[i1].component;
@@ -96,6 +109,11 @@ const createStore = () => {
         commit
       }, payload) {
         commit('setNodeAudioN', payload)
+      },
+      setNodePlugs({
+        commit
+      }, payload) {
+        commit('setNodePlugs', payload)
       }
     }
   }); //end of store

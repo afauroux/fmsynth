@@ -1,12 +1,12 @@
 <template>
   <!-- Oscilloscope and Spectrum annalyser stolen from width=400 height=200https://codepen.io/ContemporaryInsanity/pen/Mwvqpb-->
   <div class="container">
-    <button @click="type = type == 'scope' ? 'spectrum' : 'scope'">f</button>
-    <canvas width=600 height=400 ref='scope'></canvas>
+    <button @click="type = type == 'scope' ? 'spectrum' : 'scope'">{{type == 'scope' ? 'w' :'f'}}</button>
+    <canvas width=300 height=600 ref='scope'></canvas>
   </div>
 </template>
 
-<style>
+<style scoped>
 .container {
 	display: flex;
 }
@@ -14,6 +14,9 @@ canvas {
 	display: block;
 	width: 100%;
 	height: calc(25vw / 2);
+}
+button {
+	width: 3em;
 }
 </style>
 
